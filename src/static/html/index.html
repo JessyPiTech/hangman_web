@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Hangman Game</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./static/css/style.css">
+</head>
+<body class="container" style="background-image: url('./static/img/fond.jpg');">
+    <script>
+        $(document).ready(function() {
+            $('.input100').each(function(){
+                $(this).on('input', function(){
+                    if($(this).val().trim() !== "") {
+                        $(this).addClass('has-val');
+                    } else {
+                        $(this).removeClass('has-val');
+                    }
+                });
+            });
+        });
+    </script>
+    <header style="width: 100%;">
+        <nav >
+            <ul>
+                <li>
+                <a href="/Ac">Home</a>
+                </li>
+                <li>
+                <a href="/profil">Profil</a>
+                </li>
+                <li>
+                <a href="#">Join</a>
+                </li>
+                <li>
+                <a href="/dev">Developpeur</a>
+                </li>
+                
+            </ul>
+        </nav>
+    </header>
+    <main style="display: flex;justify-content: center;">
+        {{if .Statue}}
+            <div class="bob">
+                {{ if (eq .Page "Dev") }}
+                    <div  style="display: flex;align-items: center;justify-content: space-around;padding: 2%;">
+                        <div style="display: flex;flex-direction: column;align-items: center;">
+                            <img style="width: 150px;padding: 10%;" class="rad" src="./static/img/dev.png">
+                            <p>jess</p>
+                        </div>
+                        <div style="display: flex;flex-direction: column;align-items: center;">
+                            <img style="width: 150px;padding: 10%;" class="rad" src="./static/img/dev.png">
+                            <p>moon</p>
+                        </div>
+                    </div>
+                {{ else if (eq .Page "Profil") }}
+                    <h1>Hello {{.Pseudo}}</h1>
+                    <p style="margin-left: auto;">Score: {{.Score}}</p>
+                    <img style="width: 300px;padding: 10%;" class="rad" src="./static/img/dev.png">
+                {{ else if (eq .Page "HasWon") }}
+                    <h1 style="text-align: center;">Hangman Game</h1>
+                    <p style="margin-left: auto;">Your Score: {{.Score}}</p>
+                    <h1>Win!</h1>
+                    <p style="padding: 5%;">Congratulations, you've guessed the word!</p>
+                    <form action="/replay" method="POST">
+                        <input type="submit" value="Replay">
+                    </form>  
+                {{ else if (eq .Page "HasDefeat") }}
+                    <div>
+                        <h1>defeat!</h1>
+                        <p>Congratulations, you're a loser!</p>
+                        <p>Your Score: a big 0</p>
+                        <img class="rad"style="width: 600px; padding: 2%;" src="./static/img/defeat.png" alt="defeat">
+                        <form action="/replay" method="POST">
+                            <input type="submit" value="Replay">
+                        </form>
+                    </div>
+                {{ else if (eq .Page "Ac") }}
+                    <h1 style="text-align: center;">Hangman Game</h1>
+                    <p style="margin-left: auto;">Your Score: {{.Score}}</p>
+                    <div class="game-options">
+                        <div class="button-container">
+                            <a href="/EasyMode"  class="button apa">
+                                <img class="rad acc" src="./static/img/easy.png" alt="Easy Mode">
+                                <p>Easy Mode</p>
+                            </a>
+                        </div>
+                        <div class="button-container">
+                            <a href="/MediumMode"  class="button apa">
+                                <img class="rad acc" src="./static/img/normal.png" alt="Medium Mode">
+                                <p>Medium Mode</p>
+                            </a>
+                        </div>
+                        <div class="button-container">
+                            <a href="/HardMode"  class="button apa">
+                                <img class="rad acc" src="./static/img/hard.jpg" alt="Hard Mode">
+                                <p>Hard Mode</p>
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                    {{ if (eq .Ms "Il n'y a pas de sauvegarde") }}
+                        {{else}}
+                        <form action="/rego">
+                            <button type="submit">go at the last Game</button>
+                        </form>
+                    {{end}}
+                    {{if (eq .Ms "you didn't have play") }}
+                        {{else}}
+                        <form action="/register">
+                            <button type="submit">Save and leave</button>
+                        </form>  
+                    {{end}}
+                    </div>
+                {{ else if (eq .Page "la") }}
+                    <div>
+                        <h1 style="text-align: center;">Hangman Game</h1>
+                        <p style="margin-left: auto;">Your Score: {{.Score}}</p>
+                        <form action="/hangman" method="post">
+                            <label for="letter">Guess a Letter:</label>
+                            <input type="text" id="letter" name="letter" required>
+                            <button type="submit">Submit</button>
+                        </form>
+                        <p>Word to Guess: {{.Word}}</p>
+                        <img style="width: 485px;" class="rad" src="./static/img/{{.Essay}}.png" alt="{{.Essay}}">
+                        <p>Essay: {{.Essay}}</p>
+                        {{if .GuessedLetter}}
+                            <p>Your letters guessed: {{.GuessedLetter}}</p>
+                        {{end}}
+                        {{if .Ms}}
+                            <p>attention: {{.Ms}}</p>
+                        {{end}}
+                        {{ if (eq .Ms "Il n'y a pas de sauvegarde") }}
+                            <form action="/Ac">
+                                <button style="background-color: red;" type="submit">go to menu</button>
+                            </form>
+                            {{else}}
+                            <form action="/mise">
+                                <button type="submit">Save and back</button>
+                            </form>
+                        {{end}}
+                    </div>
+                {{ end }}
+            </div>
+        {{else}}
+            <div style="display: flex;border-radius: 20px;background-color: #fff;box-shadow: 5px;flex-direction: column;align-items: center;font-family: Poppins;">
+                <div style="width: 390px;display: flex;border-radius: 10px;background-color: #fff;flex-direction: column;align-items: center;font-family: Poppins;padding: 77px 55px 33px 55px;box-shadow: 0px 5px 25px -10px #8f8f8f;">
+                    <h1 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size: 2em;">Welcome</h1>
+                    <img style="width: 55px;border-radius: 8px;" src="./static/img/H.png" alt="defeat">
+                    <form action="/Compte" method="post" class="login100-form validate-form" style="display: flex;flex-direction: column;align-items: center;width: 100%;">
+                        <div style="display: flex;flex-direction: column;align-items: flex-start;width: 100%;margin: 5%;">
+                            <div class="wrap-input100 validate-input" style="border-bottom: 2px solid #adadad;width: 100%;text-align: left;margin: 5% 0 5% 0;">
+                                <input class="input100" style="outline: none;border: none;" type="text" id="pseudo" name="pseudo" required>
+                                <span  class="focus-input100" data-placeholder="Pseudo"></span>
+                            </div>
+                            <div class="wrap-input100 validate-input" style="border-bottom: 2px solid #adadad;width: 100%;text-align: left;margin: 5% 0 5% 0;">
+                                <input class="input100" style="outline: none;border: none;" type="text" id="password" name="password" required>
+                                <span  class="focus-input100" data-placeholder="Password"></span>
+                            </div>
+                        </div>
+                        {{if .Ms}}
+                            <p style="color: #adadad;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;font-size: medium;">attention: {{.Ms}}</p>
+                        {{end}}
+                        <div class="container-login100-form-btn" style="width: 100%;">
+                            <div class="wrap-login100-form-btn">
+                                <div class="login100-form-bgbtn"></div>
+                                <button class="login100-form-btn" style="background: -webkit-linear-gradient(right, #b721ff,#21d4fd );padding: 5%;border-radius: 25px;width: 100%;" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div style="display: flex;align-items: center;flex-direction: column;padding:20px 0 20px 0">
+                        <p style="margin: 0px;color: #adadad;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;font-size: medium;letter-spacing: 0px;">You don’t have an account?</p>
+                        <p style="margin: 0px;color: #adadad;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;font-size: medium;letter-spacing: 0px;">Enter a Pseudo and Password</p>
+                    </div>
+                </div>
+            </div>
+        {{end}}
+    </main>
+</body>
+</html>

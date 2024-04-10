@@ -1,0 +1,4 @@
+to start do "make build" to the racine
+and do "./hangman-web.exe"
+and go to your navigator at localhost:8901 
+connecte you, choose mode and and go play

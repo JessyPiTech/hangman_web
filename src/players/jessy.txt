@@ -1,0 +1,7 @@
+123
+d_ _ _ e_ _ 
+true false false false true false false 
+10
+500
+d-
+drapeau
